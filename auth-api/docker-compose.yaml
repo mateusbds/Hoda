@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  api:
+    container_name: hoda-auth-dev
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    env_file: .env.dev
+    command: sh -c "yarn start:dev"
+    depends_on:
+      - db
+    ports:
+      - 4000:4000
+      - 9229:9229
+      - 5555:5555
+    networks:
+      - hoda-auth-network
+    volumes:
+      - .:/usr/src/app
+    restart: unless-stopped
+
+  db:
+    build: ./.docker/postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./.docker/dbdata:/var/lib/postgresql/data
+      - ./.docker/sql:/docker-entrypoint-initdb.d
+    networks:
+      - hoda-auth-network
+
+  redis:
+    build:
+      context: .docker/redis
+      dockerfile: ./Dockerfile
+    ports:
+      - '6379:6379'
+    volumes:
+      - ./.docker/redis/data:/data
+    networks:
+      - hoda-auth-network
+
+networks:
+  hoda-auth-network:
+    driver: bridge

@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  client:
+    container_name: hoda-client-dev
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    command: sh -c "yarn dev"
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/src/app
+    restart: unless-stopped
