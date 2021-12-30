@@ -1,3 +1,3 @@
 {
-  "eslint.workingDirectories": ["auth-api", "client"]
+  "eslint.workingDirectories": ["auth-api-old", "auth-api", "client"]
 }
